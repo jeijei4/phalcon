@@ -14,6 +14,7 @@ namespace Phalcon\Html\Helper;
 use Phalcon\Html\Exception;
 
 use function array_merge;
+use function var_dump;
 
 /**
  * Class Style
@@ -23,22 +24,27 @@ use function array_merge;
 class Style extends AbstractSeries
 {
     /**
+     * @var bool
+     */
+    private bool $isStyle = false;
+
+    /**
      * Add an element to the list
      *
-     * @param string $href
+     * @param string $url
      * @param array  $attributes
      *
      * @return $this
      * @throws Exception
      */
-    public function add(string $href, array $attributes = [])
+    public function add(string $url, array $attributes = [])
     {
         $this->store[] = [
-            'renderFullElement',
+            "renderTag",
             [
                 $this->getTag(),
-                '',
-                $this->getAttributes($href, $attributes),
+                $this->getAttributes($url, $attributes),
+                "/"
             ],
             $this->indent(),
         ];
@@ -47,32 +53,50 @@ class Style extends AbstractSeries
     }
 
     /**
-     * @return string
+     * Sets if this is a style or link tag
+     *
+     * @param bool $flag
+     *
+     * @return $this
      */
-    protected function getTag(): string
+    public function setStyle(bool $flag): Style
     {
-        return 'style';
+        $this->isStyle = $flag;
+
+        return $this;
     }
 
     /**
      * Returns the necessary attributes
      *
-     * @param string $href
+     * @param string $url
      * @param array  $attributes
      *
      * @return array
      */
-    protected function getAttributes(string $href, array $attributes): array
+    protected function getAttributes(string $url, array $attributes): array
     {
         $required = [
-            'rel'   => 'stylesheet',
-            'href'  => $href,
-            'type'  => 'text/css',
-            'media' => 'screen',
+            "rel"   => "stylesheet",
+            "href"  => $url,
+            "type"  => "text/css",
+            "media" => "screen",
         ];
 
-        unset($attributes['href']);
+        if (true === $this->isStyle) {
+            unset($required["rel"]);
+        }
+
+        unset($attributes["href"]);
 
         return array_merge($required, $attributes);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTag(): string
+    {
+        return true === $this->isStyle ? "style" : "link";
     }
 }

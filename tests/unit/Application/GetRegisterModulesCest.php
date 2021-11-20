@@ -25,7 +25,7 @@ use UnitTester;
 class GetRegisterModulesCest
 {
     /**
-     * Tests Phalcon\Acl\Role :: registerModules()
+     * Tests Phalcon\Application\* :: registerModules()
      *
      * @param UnitTester $I
      *
@@ -125,7 +125,7 @@ class GetRegisterModulesCest
 
         $I->expectThrowable(
             new Exception(
-                'Module "no-module" is not registered in the application container'
+                "Module 'no-module' is not registered in the application container"
             ),
             function () {
                 $application = new ApplicationFixture();

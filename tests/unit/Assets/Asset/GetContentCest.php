@@ -20,6 +20,9 @@ use Phalcon\Assets\Exception;
 use UnitTester;
 
 use function dataDir;
+use function file_get_contents;
+
+use const PHP_EOL;
 
 /**
  * Class GetContentCest
@@ -45,10 +48,10 @@ class GetContentCest
 
         $asset = new Asset($example['type'], $example['path']);
 
-        $I->openFile(dataDir($example['path']));
-
-        $actual = $asset->getContent(dataDir());
-        $I->seeFileContentsEqual($actual);
+        $expected = file_get_contents(dataDir($example['path']));
+        $expected = str_replace("\r\n", PHP_EOL, $expected);
+        $actual   = $asset->getContent(dataDir());
+        $I->assertEquals($expected, $actual);
     }
 
     /**
@@ -64,7 +67,7 @@ class GetContentCest
         $I->wantToTest('Assets\Asset - getContent() - exception 404');
 
         $file    = 'assets/assets/1198.css';
-        $message = 'Asset\'s content for "' . dataDir($file) . '" cannot be read';
+        $message = "Asset's content for '" . dataDir($file) . "' cannot be read";
         $I->expectThrowable(
             new Exception($message),
             function () use ($file) {
@@ -98,7 +101,7 @@ class GetContentCest
         $I->wantToTest('Assets\Asset - getContent() - exception cannot read file');
 
         $file    = 'assets/assets/1198.css';
-        $message = 'Asset\'s content for "' . dataDir($file) . '" cannot be read';
+        $message = "Asset's content for '" . dataDir($file) . "' cannot be read";
         $I->expectThrowable(
             new Exception($message),
             function () use ($file) {

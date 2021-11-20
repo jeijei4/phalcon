@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Phalcon\Html\Helper;
 
-use Phalcon\Html\EscaperInterface;
+use Phalcon\Html\Escaper\EscaperInterface;
 use Phalcon\Html\Exception;
 
 use function array_intersect_key;
@@ -25,10 +25,6 @@ use function trim;
 use const PHP_EOL;
 
 /**
- * Class AbstractHelper
- *
- * @package Phalcon\Html\Helper
- *
  * @property string           $delimiter
  * @property EscaperInterface $escaper
  * @property string           $indent
@@ -180,7 +176,6 @@ abstract class AbstractHelper
      * @param array  $attributes
      *
      * @return string
-     * @throws Exception
      */
     protected function renderElement(
         string $tag,
@@ -198,7 +193,6 @@ abstract class AbstractHelper
      * @param bool   $raw
      *
      * @return string
-     * @throws Exception
      */
     protected function renderFullElement(
         string $tag,
